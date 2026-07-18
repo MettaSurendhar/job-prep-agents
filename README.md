@@ -89,6 +89,23 @@ $env:OLLAMA_API_KEY = "paste-key-here"
 The other three agents (`dsa_problem`, `cs_fundamentals`, `interview_qa`) don't
 need this — they only talk to your local model.
 
+### 3b. (Optional) Set a YouTube API key for real embedded videos in DSA problems
+
+Without this, `dsa_problem` still gives you a working YouTube *search* link. With
+it, the exact matching video gets embedded directly in the page. It's free:
+
+1. Go to https://console.cloud.google.com/, create a project (or use an existing one).
+2. Enable the **YouTube Data API v3** for that project.
+3. Go to **Credentials** → **Create Credentials** → **API key**.
+4. Copy the key.
+
+```powershell
+$env:YOUTUBE_API_KEY = "paste-key-here"
+```
+
+The free tier covers around 100 searches/day by default — this agent only makes
+one search per day, so you'll never come close to the limit.
+
 ### 4. Test it manually
 
 ```powershell
@@ -102,6 +119,8 @@ agents are scheduled today.
 
 Open `run_scheduler.bat` and update:
 - `OLLAMA_API_KEY` (or remove that line if you're not using job_digest)
+- `YOUTUBE_API_KEY` (optional — add a line `set YOUTUBE_API_KEY=your-key-here` if
+  you set one up in step 3b, otherwise DSA problems just link to a YouTube search instead)
 - The `cd` path to your actual project folder
 - The path to `venv\Scripts\python.exe`
 
@@ -141,18 +160,35 @@ ready (minimize it if you're not ready to look yet) → click through the tabs.
 
 ### What's in each tab
 
-- **DSA Problem**: picked from a curated bank of real, well-known LeetCode problems
-  (not AI-invented) — so every problem links to the actual LeetCode page, plus a
-  pre-filled YouTube search for "neetcode + problem name" (one click to the right
-  explainer video, since guessing an exact video URL risks a dead/wrong link).
-- **CS Fundamentals**: ends with a "Further Reading" section — real links fetched
-  live via DuckDuckGo at generation time. If the live search comes up empty (no
-  internet, or DuckDuckGo changes its page layout), it falls back to a plain
-  Google search link for the concept, so you're never left with nothing.
-- **Interview Prep**: every "Sample Answer" section gets a "🔊 Read aloud" button —
-  uses your browser's built-in text-to-speech (no installs, works offline) so you
-  can hear the answer delivered aloud and practice your own delivery against it.
-  Click again (now "⏹ Stop") to stop mid-read.
+- **DSA Problem**: picked from a curated bank of real, well-known LeetCode
+  problems (not AI-invented), tagged **Beginner / Intermediate / Advanced**.
+  Gives you multiple solution tiers — Brute Force, Better, Optimal — each with
+  its own reasoning, code, and complexity, plus a Mermaid diagram of the optimal
+  approach. Links to the real LeetCode page, and either an embedded YouTube
+  video (if you set up a `YOUTUBE_API_KEY`, see step 3b) or a pre-filled YouTube
+  search as a fallback.
+- **CS Fundamentals**: includes a Mermaid diagram of the concept where it helps,
+  and ends with a "Further Reading" section — real links fetched live via
+  DuckDuckGo at generation time. If the live search comes up empty (no internet,
+  or DuckDuckGo changes its page layout), it falls back to a plain Google search
+  link for the concept, so you're never left with nothing.
+- **Interview Prep**: every "Sample Answer" section gets a "🔊 Read aloud" button
+  (uses your browser's built-in text-to-speech, no installs, works offline) and
+  a "📋 Copy" button. A voice picker at the top of the page lets you switch
+  between any voice installed on your system — it tries to default to a
+  natural/neural-sounding one if your system has one, otherwise the first
+  available voice. Click "⏹ Stop" to stop mid-read.
+- **Code blocks** anywhere in the page get their own small "Copy" button in the
+  top-right corner — copy buttons only show up where they're actually useful
+  (code and sample answers), not on the page in general.
+
+### A note on Mermaid diagrams
+
+The local model is asked to include a Mermaid diagram for DSA solutions and CS
+concepts where it helps. Small local models occasionally get Mermaid's syntax
+slightly wrong — if a diagram fails to render, it just shows as a code block
+instead of breaking the page, so this is a "nice when it works" feature rather
+than a guarantee.
 
 ### Avoiding repeated questions
 
