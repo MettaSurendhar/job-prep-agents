@@ -1,0 +1,28 @@
+# Virtual Environments
+.venv/
+venv/
+env/
+
+# Environment Variables & Secrets
+.env
+.env.*
+
+# Logs
+*.log
+
+# Python Cache
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Empty Folders to Keep (Ignore contents except .gitkeep)
+history/*
+!history/.gitkeep
+
+outputs/*
+!outputs/.gitkeep
+
+# System/OS Files
+.DS_Store
+Thumbs.db

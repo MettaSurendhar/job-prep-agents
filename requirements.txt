@@ -1,0 +1,4 @@
+langchain>=1.0.0
+langchain-ollama
+requests
+markdown
