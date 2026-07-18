@@ -4,7 +4,7 @@ from datetime import datetime
 from langchain.agents import create_agent
 from langchain_ollama import ChatOllama
 
-from . import _history
+from . import _history, _websearch
 
 NAME = "cs-fundamentals"
 
@@ -31,6 +31,17 @@ def extract_concept(text):
     """Pull the concept name out of the '## Concept' section for logging."""
     match = re.search(r"## Concept\s*\n(.+)", text)
     return match.group(1).strip() if match else "(unnamed concept)"
+
+
+def build_further_reading(concept):
+    """Fetch real links for deeper reading on this concept. Falls back to a
+    plain search-query link if the live search comes up empty."""
+    links = _websearch.duckduckgo_links(f"{concept} explained tutorial", max_results=3)
+    if links:
+        lines = "\n".join(f"- [{title}]({url})" for title, url in links)
+        return f"\n## Further Reading\n{lines}\n"
+    fallback_url = _websearch.fallback_search_link(f"{concept} explained")
+    return f"\n## Further Reading\n- [Search for '{concept}' explained]({fallback_url})\n"
 
 
 def run():
@@ -75,14 +86,16 @@ def run():
     })
 
     content = result["messages"][-1].content
+    concept = extract_concept(content)
 
     _history.append(NAME, {
         "date": datetime.now().strftime("%Y-%m-%d"),
         "topic": topic,
-        "summary": extract_concept(content),
+        "summary": concept,
     })
 
     return (
         f"# Daily CS Fundamentals — {topic}\n\n"
         f"{content}\n"
+        f"{build_further_reading(concept)}"
     )

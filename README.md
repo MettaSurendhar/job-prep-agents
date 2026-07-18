@@ -127,18 +127,32 @@ find "Job Prep Agents" under Task Scheduler Library.
 ### How you're notified
 
 After all of today's agents finish, `scheduler.py` automatically:
-1. Builds `outputs/viewer-YYYY-MM-DD.html` — one page with a collapsible card per
-   agent (click to expand/collapse), showing the fully rendered question, hints,
-   and sample answers — no need to open raw `.md` files.
+1. Builds `outputs/viewer-YYYY-MM-DD.html` — a tabbed page (one tab per agent,
+   click to switch — no scrolling through everything at once), showing the fully
+   rendered question, hints, and sample answers.
 2. Rebuilds `outputs/index.html`, linking every day's viewer page so you can browse
    past days too.
-3. Pops up a native Windows notification box ("Your daily job prep is ready!") —
-   it'll sit there waiting even if you're away, no need to be watching the screen.
+3. Pops up a native Windows notification window with a working minimize button
+   ("Your daily job prep is ready!") — it'll sit there waiting even if you're away.
 4. Opens the viewer page automatically in your default browser.
 
-So the flow each morning is: notification pops up → browser opens → you read
-through the day's cards. Nothing needs checking manually unless you want to revisit
-an older day via `index.html`.
+So the flow each morning is: browser opens with today's tabs → popup confirms it's
+ready (minimize it if you're not ready to look yet) → click through the tabs.
+
+### What's in each tab
+
+- **DSA Problem**: picked from a curated bank of real, well-known LeetCode problems
+  (not AI-invented) — so every problem links to the actual LeetCode page, plus a
+  pre-filled YouTube search for "neetcode + problem name" (one click to the right
+  explainer video, since guessing an exact video URL risks a dead/wrong link).
+- **CS Fundamentals**: ends with a "Further Reading" section — real links fetched
+  live via DuckDuckGo at generation time. If the live search comes up empty (no
+  internet, or DuckDuckGo changes its page layout), it falls back to a plain
+  Google search link for the concept, so you're never left with nothing.
+- **Interview Prep**: every "Sample Answer" section gets a "🔊 Read aloud" button —
+  uses your browser's built-in text-to-speech (no installs, works offline) so you
+  can hear the answer delivered aloud and practice your own delivery against it.
+  Click again (now "⏹ Stop") to stop mid-read.
 
 ### Avoiding repeated questions
 

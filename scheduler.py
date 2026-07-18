@@ -74,61 +74,53 @@ body {
   line-height: 1.6;
 }
 .wrap { max-width: 780px; margin: 0 auto; }
-.top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
 h1 { font-size: 1.6rem; margin-bottom: 4px; }
 .date { color: var(--muted); margin-bottom: 4px; font-size: 0.95rem; }
 .progress-label { color: var(--muted); font-size: 0.85rem; margin-bottom: 24px; }
-.toolbar { display: flex; gap: 10px; margin-bottom: 20px; }
-.toolbar button {
-  background: var(--card-bg);
-  color: var(--text);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 8px 14px;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: background 0.15s ease, transform 0.1s ease;
+
+.tab-bar {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 20px;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0;
 }
-.toolbar button:hover { background: var(--card-bg-hover); }
-.toolbar button:active { transform: scale(0.97); }
-details.agent-card {
+.tab-btn {
+  background: transparent;
+  color: var(--muted);
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 10px 16px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+.tab-meta { color: var(--muted); font-weight: 400; font-size: 0.78rem; margin-left: 6px; }
+
+.tab-panel {
+  display: none;
   background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: 10px;
-  margin-bottom: 16px;
-  padding: 0 20px;
-  transition: background 0.15s ease, border-color 0.15s ease;
+  padding: 20px;
+  animation: fadeIn 0.2s ease;
 }
-details.agent-card:hover { border-color: #35405a; }
-details.agent-card summary {
-  cursor: pointer;
-  padding: 16px 0;
-  font-weight: 600;
-  font-size: 1.05rem;
-  list-style: none;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  user-select: none;
-}
-details.agent-card summary::-webkit-details-marker { display: none; }
-details.agent-card summary::before {
-  content: "\\25B8";
-  color: var(--accent);
-  transition: transform 0.15s ease;
-  display: inline-block;
-}
-details.agent-card[open] summary::before { transform: rotate(90deg); }
-.meta { color: var(--muted); font-weight: 400; font-size: 0.85rem; margin-left: auto; }
-.agent-content { padding-bottom: 20px; animation: fadeIn 0.2s ease; }
+.tab-panel.active { display: block; }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
 .agent-content h1 { font-size: 1.15rem; color: var(--accent); margin-top: 4px; }
 .agent-content h2 { font-size: 1.15rem; color: var(--accent); margin-top: 20px; }
 .agent-content h3 { font-size: 1rem; color: var(--text); margin-top: 16px; }
 .agent-content code { background: #0d0f13; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
 .agent-content pre { background: #0d0f13; padding: 14px; border-radius: 8px; overflow-x: auto; position: relative; }
 .agent-content pre code { background: none; padding: 0; }
-.copy-btn {
+
+.copy-btn, .read-btn {
   background: var(--border);
   color: var(--text);
   border: none;
@@ -137,8 +129,10 @@ details.agent-card[open] summary::before { transform: rotate(90deg); }
   font-size: 0.75rem;
   cursor: pointer;
   margin-top: 8px;
+  margin-right: 6px;
 }
-.copy-btn:hover { background: #35405a; }
+.copy-btn:hover, .read-btn:hover { background: #35405a; }
+
 a { color: var(--accent); }
 .back-link { display: inline-block; margin-bottom: 20px; color: var(--muted); text-decoration: none; }
 .back-link:hover { color: var(--accent); }
@@ -146,9 +140,13 @@ a { color: var(--accent); }
 
 VIEWER_SCRIPT = """
 <script>
-function setAll(open) {
-  document.querySelectorAll('details.agent-card').forEach(function(d) { d.open = open; });
+function showTab(id) {
+  document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+  document.getElementById('btn-' + id).classList.add('active');
 }
+
 function copyCard(btn, id) {
   var el = document.getElementById(id);
   var text = el.innerText;
@@ -158,13 +156,60 @@ function copyCard(btn, id) {
     setTimeout(function() { btn.innerText = original; }, 1500);
   });
 }
+
+// Read-aloud: finds every heading whose text is "Sample Answer" inside agent
+// content, and adds a Play/Stop button that reads the following text using the
+// browser's built-in text-to-speech (no installs, works offline).
+function initReadAloud() {
+  var headings = document.querySelectorAll('.agent-content h1, .agent-content h2, .agent-content h3');
+  headings.forEach(function(h) {
+    if (!/sample answer/i.test(h.textContent)) return;
+
+    var text = '';
+    var node = h.nextElementSibling;
+    while (node && !/^H[1-3]$/.test(node.tagName)) {
+      text += node.innerText + ' ';
+      node = node.nextElementSibling;
+    }
+
+    var btn = document.createElement('button');
+    btn.className = 'read-btn';
+    btn.innerText = '\\uD83D\\uDD0A Read aloud';
+    btn.dataset.speaking = 'false';
+    btn.addEventListener('click', function() {
+      if (!window.speechSynthesis) {
+        alert('Speech synthesis is not supported in this browser.');
+        return;
+      }
+      if (btn.dataset.speaking === 'true') {
+        window.speechSynthesis.cancel();
+        btn.innerText = '\\uD83D\\uDD0A Read aloud';
+        btn.dataset.speaking = 'false';
+        return;
+      }
+      window.speechSynthesis.cancel();
+      var utter = new SpeechSynthesisUtterance(text);
+      utter.rate = 0.95;
+      utter.onend = function() {
+        btn.innerText = '\\uD83D\\uDD0A Read aloud';
+        btn.dataset.speaking = 'false';
+      };
+      window.speechSynthesis.speak(utter);
+      btn.innerText = '\\u23F9 Stop';
+      btn.dataset.speaking = 'true';
+    });
+    h.parentNode.insertBefore(btn, h.nextSibling);
+  });
+}
+document.addEventListener('DOMContentLoaded', initReadAloud);
 </script>
 """
 
 
 def build_daily_viewer(results):
     """Combine today's (agent_name, markdown_output, elapsed_seconds) results
-    into one HTML page. Returns the path to the generated file."""
+    into one HTML page with a tab per agent. Returns the path to the generated
+    file."""
     date_str = datetime.now().strftime("%Y-%m-%d")
     viewer_path = OUTPUTS_DIR / f"viewer-{date_str}.html"
 
@@ -176,18 +221,24 @@ def build_daily_viewer(results):
     )
     prev_date = existing_dates[-1] if existing_dates else None
 
-    sections = []
+    tab_buttons = []
+    tab_panels = []
     for i, (name, content, elapsed) in enumerate(results):
         html_body = md_lib.markdown(content, extensions=["fenced_code", "tables"])
         pretty_name = name.replace("-", " ").title()
-        card_id = f"card-{i}"
-        sections.append(
-            f'<details class="agent-card" open>'
-            f'<summary>{pretty_name} <span class="meta">({elapsed:.1f}s)</span></summary>'
-            f'<div class="agent-content" id="{card_id}">{html_body}'
-            f'<button class="copy-btn" onclick="copyCard(this, \'{card_id}\')">Copy text</button>'
+        panel_id = f"panel-{i}"
+        is_first = i == 0
+
+        tab_buttons.append(
+            f'<button class="tab-btn{" active" if is_first else ""}" '
+            f'id="btn-{panel_id}" onclick="showTab(\'{panel_id}\')">'
+            f'{pretty_name}<span class="tab-meta">{elapsed:.0f}s</span></button>'
+        )
+        tab_panels.append(
+            f'<div class="tab-panel{" active" if is_first else ""}" id="{panel_id}">'
+            f'<div class="agent-content">{html_body}</div>'
+            f'<button class="copy-btn" onclick="copyCard(this, \'{panel_id}\')">Copy text</button>'
             f'</div>'
-            f"</details>"
         )
 
     nav_links = '<a class="back-link" href="index.html">&larr; All days</a>'
@@ -207,11 +258,10 @@ def build_daily_viewer(results):
   <h1>Job Prep — Daily Digest</h1>
   <div class="date">{date_str}</div>
   <div class="progress-label">{len(results)} agent{'s' if len(results) != 1 else ''} completed today</div>
-  <div class="toolbar">
-    <button onclick="setAll(true)">Expand all</button>
-    <button onclick="setAll(false)">Collapse all</button>
+  <div class="tab-bar">
+    {''.join(tab_buttons)}
   </div>
-  {''.join(sections)}
+  {''.join(tab_panels)}
 </div>
 {VIEWER_SCRIPT}
 </body>
