@@ -15,7 +15,6 @@ REM default 5 min, so back-to-back agent calls (and manual reruns) stay fast.
 set OLLAMA_KEEP_ALIVE=30m
 
 REM Edit this to the full path of your project folder
-cd /d "D:\Metta Projects\job-prep-agents"
-
+cd /d "D:\MettaProjects\job-prep-agents"
 REM Edit this to the full path of your venv's python.exe
-"D:\Metta Projects\job-prep-agents\.venv\Scripts\python.exe" scheduler.py >> runner.log 2>&1
+"D:\MettaProjects\job-prep-agents\.venv\Scripts\python.exe" scheduler.py >> runner.log 2>&1
