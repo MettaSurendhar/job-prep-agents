@@ -22,25 +22,25 @@ videos.
 
 ### Tabs :
 
-![Main Dashboard](docs\screenshots\main.png)
+![Main Dashboard](docs/screenshots/main.png)
 
 ### CS Fundamentals :
 
-![CS Fundamentals Tab](docs\screenshots\cs-tab-1.png)
-![CS Fundamentals Tab](docs\screenshots\cs-tab-2.png)
+![CS Fundamentals Tab](docs/screenshots/cs-tab-1.png)
+![CS Fundamentals Tab](docs/screenshots/cs-tab-2.png)
 
 ### DSA Problem :
 
-![DSA Problems Tab](docs\screenshots\dsa-tab-1.png)
-![DSA Problems Tab](docs\screenshots\dsa-tab-2.png)
-![DSA Problems Tab](docs\screenshots\dsa-tab-3.png)
-![DSA Problems Tab](docs\screenshots\dsa-tab-4.png)
-![DSA Problems Tab](docs\screenshots\dsa-tab-5.png)
+![DSA Problems Tab](docs/screenshots/dsa-tab-1.png)
+![DSA Problems Tab](docs/screenshots/dsa-tab-2.png)
+![DSA Problems Tab](docs/screenshots/dsa-tab-3.png)
+![DSA Problems Tab](docs/screenshots/dsa-tab-4.png)
+![DSA Problems Tab](docs/screenshots/dsa-tab-5.png)
 
 ### Interview QA :
 
-![Interview QA Tab](docs\screenshots\qa-tab-1.png)
-![Interview QA Tab](docs\screenshots\qa-tab-2.png)
+![Interview QA Tab](docs/screenshots/qa-tab-1.png)
+![Interview QA Tab](docs/screenshots/qa-tab-2.png)
 
 ## What it does
 
