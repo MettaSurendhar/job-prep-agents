@@ -1,28 +1,19 @@
-# Virtual Environments
-.venv/
-venv/
-env/
-
-# Environment Variables & Secrets
+# Environment secrets
 .env
-.env.*
 
-# Logs
-*.log
-
-# Python Cache
-**/__pycache__/
+# Python
+__pycache__/
 *.pyc
-*.pyo
-*.pyd
+venv/
+.venv/
 
-# Empty Folders to Keep (Ignore contents except .gitkeep)
-history/*
-!history/.gitkeep
-
+# Generated at runtime — not part of the repo
 outputs/*
 !outputs/.gitkeep
+history/*
+!history/.gitkeep
+runner.log
 
-# System/OS Files
+# OS cruft
 .DS_Store
 Thumbs.db
