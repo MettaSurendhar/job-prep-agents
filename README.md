@@ -6,6 +6,8 @@ Q&A every morning, scheduled to run automatically. No per-call API costs,
 nothing sent to third parties (except the optional job-digest agent, which
 uses Ollama's hosted search, plus DuckDuckGo/YouTube lookups for links/videos).
 
+> 📖 **Read the full write-up:** [Tired of Doing Job Prep Manually Every Day? I Built Agents That Do It For Me](https://medium.com/@mettasurendhar/tired-of-doing-job-prep-manually-every-day-i-built-agents-that-do-it-for-me-34769f39df61?sharedUserId=mettasurendhar) — the complete Windows setup walkthrough with screenshots, from installing Ollama to scheduling it with Task Scheduler.
+
 **Tested and running on:** Windows 11, GTX 1050 (4GB VRAM), `phi4-mini` via
 Ollama, Ollama's hosted web search API, and the YouTube Data API for embedded
 videos.
