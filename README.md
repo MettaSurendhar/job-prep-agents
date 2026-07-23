@@ -14,7 +14,7 @@ videos.
 
 > Want a version you can configure with your own background and choice of
 > LLM provider (including hosted APIs like Groq/Mistral/Gemini, not just
-> Ollama)? See **[job-prep-agents-customizable](your-customizable-repo-url)**
+> Ollama)? See **[HermePrep — Generic Edition](https://github.com/MettaSurendhar/job-prep-agents-customizable)**
 > — the generalized version of this same project.
 
 > Inspired by freeCodeCamp's
