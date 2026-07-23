@@ -1,4 +1,4 @@
-# Job Prep Agents
+# HermePrep
 
 My real, working daily AI job-prep setup — a local LLM (via [Ollama](https://ollama.com))
 generates a fresh DSA problem, CS fundamentals concept, and tailored interview
@@ -161,13 +161,13 @@ Check `runner.log` for the same output as step 4.
 ### 6. Schedule it with Windows Task Scheduler
 
 ```powershell
-schtasks /Create /SC DAILY /TN "Job Prep Agents" /TR "D:\full\path\to\job-prep-agents\run_scheduler.bat" /ST 10:30 /RL HIGHEST
+schtasks /Create /SC DAILY /TN "HermePrep" /TR "D:\full\path\to\job-prep-agents\run_scheduler.bat" /ST 10:30 /RL HIGHEST
 ```
 
 Verify anytime:
 
 ```powershell
-schtasks /Query /TN "Job Prep Agents" /V /FO LIST
+schtasks /Query /TN "HermePrep" /V /FO LIST
 ```
 
 Check the **Last Result** field — `0` means success.
